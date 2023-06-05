@@ -1,0 +1,190 @@
+{
+  "resource_version": 28,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "postgres",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "name": "accounts",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "contract",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "id",
+                    "table": {
+                      "name": "contracts",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "allocations",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "currency",
+                "using": {
+                  "foreign_key_constraint_on": "rate_currency"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "contract_statusses",
+              "schema": "public"
+            },
+            "is_enum": true,
+            "array_relationships": [
+              {
+                "name": "contracts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "status",
+                    "table": {
+                      "name": "contracts",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "contracts",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "account",
+                "using": {
+                  "foreign_key_constraint_on": "id"
+                }
+              },
+              {
+                "name": "contract_statuss",
+                "using": {
+                  "foreign_key_constraint_on": "status"
+                }
+              },
+              {
+                "name": "currencyByCurrency",
+                "using": {
+                  "foreign_key_constraint_on": "currency"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "currencies",
+              "schema": "public"
+            },
+            "array_relationships": [
+              {
+                "name": "allocations",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "rate_currency",
+                    "table": {
+                      "name": "allocations",
+                      "schema": "public"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "contracts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "currency",
+                    "table": {
+                      "name": "contracts",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "rate_types",
+              "schema": "public"
+            },
+            "is_enum": true,
+            "array_relationships": [
+              {
+                "name": "resources",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "rate_type",
+                    "table": {
+                      "name": "resources",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "resources",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "rateTypeByRateType",
+                "using": {
+                  "foreign_key_constraint_on": "rate_type"
+                }
+              }
+            ]
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "database_url": {
+              "from_env": "PG_DATABASE_URL"
+            },
+            "isolation_level": "read-committed",
+            "use_prepared_statements": false
+          }
+        }
+      }
+    ],
+    "backend_configs": {
+      "dataconnector": {
+        "athena": {
+          "uri": "http://data-connector-agent:8081/api/v1/athena"
+        },
+        "mariadb": {
+          "uri": "http://data-connector-agent:8081/api/v1/mariadb"
+        },
+        "mysql8": {
+          "uri": "http://data-connector-agent:8081/api/v1/mysql"
+        },
+        "oracle": {
+          "uri": "http://data-connector-agent:8081/api/v1/oracle"
+        },
+        "snowflake": {
+          "uri": "http://data-connector-agent:8081/api/v1/snowflake"
+        }
+      }
+    }
+  }
+}
